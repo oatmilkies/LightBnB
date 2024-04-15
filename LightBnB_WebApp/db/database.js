@@ -64,7 +64,7 @@ const addUser = function (user) {
   return pool
   .query(queryString, values)
   .then((result) => {
-    return result.rows;
+    return result.rows[0];
   })
   .catch((err) => {
     console.log(err.message);
