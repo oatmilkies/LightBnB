@@ -19,6 +19,9 @@ const users = require("./json/users.json");
  */
 const getUserWithEmail = function (email) {
   let resolvedUser = null;
+  const queryString = ``;
+  const values = [];
+
   for (const userId in users) {
     const user = users[userId];
     if (user && user.email.toLowerCase() === email.toLowerCase()) {
@@ -34,6 +37,9 @@ const getUserWithEmail = function (email) {
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithId = function (id) {
+  const queryString = ``;
+  const values = [];
+
   return Promise.resolve(users[id]);
 };
 
@@ -44,6 +50,9 @@ const getUserWithId = function (id) {
  */
 const addUser = function (user) {
   const userId = Object.keys(users).length + 1;
+  const queryString = ``;
+  const values = [];
+
   user.id = userId;
   users[userId] = user;
   return Promise.resolve(user);
@@ -69,12 +78,10 @@ const getAllReservations = function (guest_id, limit = 10) {
  * @return {Promise<[{}]>}  A promise to the properties.
  */
 const getAllProperties = function (options, limit = 10) {
-  const limitedProperties = {};
-
   const queryString = `SELECT * FROM properties LIMIT $1;`;
   const values = [limit];
 
-  pool
+  return pool
   .query(queryString, values)
   .then((result) => {
     console.log(result.rows); //result.rows is an array of objects
@@ -83,11 +90,6 @@ const getAllProperties = function (options, limit = 10) {
   .catch((err) => {
     console.log(err.message);
   });
-
-  for (let i = 1; i <= limit; i++) {
-    limitedProperties[i] = properties[i];
-  }
-  return Promise.resolve(limitedProperties);
 };
 
 getAllProperties();
