@@ -24,7 +24,6 @@ const getUserWithEmail = function (email) {
   return pool
   .query(queryString, values)
   .then((result) => {
-    console.log(result.rows[0]);
     return result.rows[0];
   })
   .catch((err) => {
@@ -44,7 +43,6 @@ const getUserWithId = function (id) {
   return pool
   .query(queryString, values)
   .then((result) => {
-    console.log(result.rows);
     return result.rows[0];
   })
   .catch((err) => {
@@ -66,16 +64,11 @@ const addUser = function (user) {
   return pool
   .query(queryString, values)
   .then((result) => {
-    console.log(result.rows);
     return result.rows;
   })
   .catch((err) => {
     console.log(err.message);
   });
-
-  //user.id = userId;
-  //users[userId] = user;
-  //return Promise.resolve(user);
 };
 
 /// Reservations
@@ -104,7 +97,6 @@ const getAllProperties = function (options, limit = 10) {
   return pool
   .query(queryString, values)
   .then((result) => {
-    //console.log(result.rows);
     return result.rows;
   })
   .catch((err) => {
