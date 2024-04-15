@@ -18,17 +18,18 @@ const users = require("./json/users.json");
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithEmail = function (email) {
-  let resolvedUser = null;
-  const queryString = ``;
-  const values = [];
+  const queryString = `SELECT * FROM users WHERE email = $1;`;
+  const values = [email];
 
-  for (const userId in users) {
-    const user = users[userId];
-    if (user && user.email.toLowerCase() === email.toLowerCase()) {
-      resolvedUser = user;
-    }
-  }
-  return Promise.resolve(resolvedUser);
+  return pool
+  .query(queryString, values)
+  .then((result) => {
+    console.log(result.rows[0]);
+    return result.rows[0];
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
 };
 
 /**
@@ -37,10 +38,18 @@ const getUserWithEmail = function (email) {
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithId = function (id) {
-  const queryString = ``;
-  const values = [];
+  const queryString = `SELECT * FROM users WHERE id = $1;`;
+  const values = [id];
 
-  return Promise.resolve(users[id]);
+  return pool
+  .query(queryString, values)
+  .then((result) => {
+    console.log(result.rows);
+    return result.rows[0];
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
 };
 
 /**
@@ -50,12 +59,23 @@ const getUserWithId = function (id) {
  */
 const addUser = function (user) {
   const userId = Object.keys(users).length + 1;
-  const queryString = ``;
-  const values = [];
+  const queryString = `INSERT INTO users (name, email, password) 
+    VALUES ($1, $2, $3) RETURNING *;`;
+  const values = [user.name, user.email, user.password];
 
-  user.id = userId;
-  users[userId] = user;
-  return Promise.resolve(user);
+  return pool
+  .query(queryString, values)
+  .then((result) => {
+    console.log(result.rows);
+    return result.rows;
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+
+  //user.id = userId;
+  //users[userId] = user;
+  //return Promise.resolve(user);
 };
 
 /// Reservations
@@ -84,7 +104,7 @@ const getAllProperties = function (options, limit = 10) {
   return pool
   .query(queryString, values)
   .then((result) => {
-    console.log(result.rows); //result.rows is an array of objects
+    //console.log(result.rows);
     return result.rows;
   })
   .catch((err) => {
